@@ -1,4 +1,4 @@
-/* General */
+
 body {
   margin: 0;
   padding: 0;
@@ -11,7 +11,7 @@ body {
   overflow: hidden;
 }
 
-/* Chat widget redondo */
+
 .chat-box {
   width: 600px;
   height: 600px;
@@ -27,7 +27,7 @@ body {
   border: 2px solid rgba(255,255,255,0.2);
 }
 
-/* Título */
+
 .chat-box h1 {
   font-size: 1.6rem;
   font-weight: 800;
@@ -40,7 +40,7 @@ body {
   transform: translateX(-50%);
 }
 
-/* Área de mensajes */
+
 .chat-mensajes {
   flex: 1;
   overflow-y: auto;
@@ -53,7 +53,7 @@ body {
   color: white;
 }
 
-/* Mensaje wrapper */
+
 .mensaje {
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@ body {
   text-align: left;
 }
 
-/* Burbujas */
+
 .burbuja {
   padding: 0.9em 1.4em;
   border-radius: 1.2em;
@@ -81,21 +81,21 @@ body {
   backdrop-filter: blur(6px);
 }
 
-/* Usuario */
+
 .mensaje.usuario .burbuja {
   background: linear-gradient(to right, #00f2fe, #e2e983);
   color: black;
   border-bottom-right-radius: 0.2em;
 }
 
-/* Asistente */
+
 .mensaje.asistente .burbuja {
   background: linear-gradient(to right, #43e97b, #38f9d7);
   color: black;
   border-bottom-left-radius: 0.2em;
 }
 
-/* Entrada */
+
 form {
   display: flex;
   gap: 0.5rem;
@@ -135,7 +135,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Error */
+
 .text-red-500 {
   color: #ff6b6b;
   font-size: 0.9em;
@@ -143,7 +143,7 @@ button:disabled {
   margin-top: 1em;
 }
 
-/* Loader */
+
 .loader {
   border: 3px solid #d6ee4d;
   border-top: 3px solid #00f2fe;
@@ -154,7 +154,6 @@ button:disabled {
   margin: 0 auto;
 }
 
-/* Scroll */
 .chat-mensajes::-webkit-scrollbar {
   width: 6px;
 }
@@ -163,7 +162,7 @@ button:disabled {
   border-radius: 3px;
 }
 
-/* Animaciones */
+
 @keyframes spin {
   100% {
     transform: rotate(360deg);

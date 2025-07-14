@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top, #1e3c72, #2a5298);
+  background: radial-gradient(circle at top, #d1be15, #c7b02f);
   height: 100vh;
   display: flex;
   align-items: center;
@@ -83,7 +83,7 @@ body {
 
 /* Usuario */
 .mensaje.usuario .burbuja {
-  background: linear-gradient(to right, #00f2fe, #4facfe);
+  background: linear-gradient(to right, #00f2fe, #e2e983);
   color: black;
   border-bottom-right-radius: 0.2em;
 }
@@ -145,7 +145,7 @@ button:disabled {
 
 /* Loader */
 .loader {
-  border: 3px solid #4facfe;
+  border: 3px solid #d6ee4d;
   border-top: 3px solid #00f2fe;
   border-radius: 50%;
   width: 24px;

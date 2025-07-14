@@ -4,7 +4,11 @@
   "main": "index.js",
   "scripts": {
     "back": "nodemon backend/src/index.js",
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "vite build && gh-pages -d dist"
   },
   "author": "",
   "license": "ISC",
@@ -38,5 +42,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "vite-plugin-gh-pages": "^1.0.1",
+    "vite-plugin-pages": "^0.33.1",
+    "vite-plugin-static-copy": "^3.1.1"
   }
 }

@@ -46,7 +46,7 @@ const buscarProductosPorCiudadTool = tool({
         if (!productos.length) return "No se encontraron productos en esa ciudad.";
         return productos.map(p => 
           `- Producto: ${p.producto}, Precio: $${p.precio}, Proveedor: ${p.proveedor}`
-        ).join('\n');
+        ).join('');
       } catch (error) {
         return `Error: ${error.message}`;
       }
@@ -77,7 +77,7 @@ const listarProductosTool = tool({
             if (!lista || lista.length === 0) return "No hay productos registrados.";
             return lista.map(prod =>
                 `- Producto: ${prod.descripcion}, Precio: $${prod.precio}, Proveedor: ${prod.proveedor}, Ciudad: ${prod.ciudad}`
-            ).join('\n');
+            ).join('');
         } catch (error) {
             return `Error al listar productos: ${error.message}`;
         }
@@ -114,7 +114,7 @@ const filtrarProductosPorCiudadYCategoriasTool = tool({
             if (!productos || productos.length === 0) return "No se encontraron productos en esa ciudad con esas categorías.";
             return productos.map(prod =>
                 `- Producto: ${prod.descripcion}, Precio: $${prod.precio}, Proveedor: ${prod.proveedor}, Ciudad: ${prod.ciudad}`
-            ).join('\n');
+            ).join('');
         } catch (error) {
             return `Error al filtrar productos: ${error.message}`;
         }
@@ -133,7 +133,7 @@ const filtrarProductosPorCategoriasTool = tool({
             if (!productos || productos.length === 0) return "No se encontraron productos con esas categorías.";
             return productos.map(prod =>
                 `- Producto: ${prod.descripcion}, Precio: $${prod.precio}, Proveedor: ${prod.proveedor}, Ciudad: ${prod.ciudad}`
-            ).join('\n');
+            ).join('');
         } catch (error) {
             return `Error al filtrar productos: ${error.message}`;
         }

@@ -19,7 +19,11 @@ Usá las herramientas disponibles para:
 - Mostrar todas las categorías
 - Filtrar productos por ciudad y categoría
 - Filtrar productos por categoría
+- Registrarse en la plataforma
+- Iniciar sesión correctamente
+- Recuperar una contraseña olvidada
 
+Usá las herramientas disponibles para dar instrucciones claras y paso a paso.
 Usá listas markdown (con "- ") para mostrar resultados
 `.trim();
 
@@ -123,6 +127,43 @@ const filtrarProductosPorCategoriasTool = tool({
     },
 });
 
+export const guiarRegistroTool = tool({
+    name: "guiarRegistro",
+    description: "Indica al usuario cómo registrarse en la plataforma paso a paso",
+    parameters: z.object({}),
+    execute: async () => {
+      return `Para registrarte en la plataforma:
+  1. Hacé clic en el botón "Registrarse" en la parte superior derecha.
+  2. Ingresá tu nombre de usuario, correo electrónico y una contraseña segura.
+  3. Confirmá los datos y presioná "Crear cuenta".
+  4. ¡Listo! Ya podés iniciar sesión con tus credenciales.`;
+    },
+});
+
+export const guiarLoginTool = tool({
+    name: "guiarLogin",
+    description: "Indica al usuario cómo iniciar sesión correctamente",
+    parameters: z.object({}),
+    execute: async () => {
+      return `Para iniciar sesión:
+  1. Hacé clic en el botón "Iniciar sesión" en la pantalla principal.
+  2. Escribí tu nombre de usuario y contraseña.
+  3. Presioná "Entrar" y accederás a tu cuenta.`;
+    },
+});
+
+export const guiarRecuperarClaveTool = tool({
+    name: "guiarRecuperarClave",
+    description: "Indica cómo recuperar una contraseña olvidada",
+    parameters: z.object({}),
+    execute: async () => {
+      return `Si olvidaste tu contraseña:
+  1. En la pantalla de inicio de sesión, hacé clic en “¿Olvidaste tu contraseña?”.
+  2. Ingresá el correo electrónico asociado a tu cuenta.
+  3. Revisá tu email y seguí las instrucciones para restablecer tu contraseña.`;
+    },
+});
+
 export function crearMarap({ verbose = true } = {}) {
     return agent({
         tools: [
@@ -130,10 +171,15 @@ export function crearMarap({ verbose = true } = {}) {
             listarProductosTool,
             listarCategoriasTool,
             filtrarProductosPorCiudadYCategoriasTool,
-            filtrarProductosPorCategoriasTool
+            filtrarProductosPorCategoriasTool,
+            guiarRegistroTool,
+            guiarLoginTool,
+            guiarRecuperarClaveTool
         ],
         llm: ollamaLLM,
         verbose,
         systemPrompt,
     });
 }
+
+

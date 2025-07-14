@@ -20,15 +20,7 @@ export default function App() {
       const respuesta = await enviarMensajeAlBackend(input);
       const respuestaJson = typeof respuesta === 'string' ? JSON.parse(respuesta) : respuesta;
 
-      let textoPlano;
-      if (respuestaJson?.data?.result) {
-        const match = respuestaJson.data.result.match(/<\/think>([\s\S]*)$/i);
-        textoPlano = match ? match[1].trim() : respuestaJson.data.result.trim();
-      } else if (typeof respuesta === 'string') {
-        textoPlano = respuesta;
-      } else {
-        textoPlano = JSON.stringify(respuesta);
-      }
+      let textoPlano = respuesta.response?.trim() || "Sin respuesta";
 
       setMensajes(ms => [...ms, { rol: 'asistente', texto: textoPlano }]);
     } catch (err) {

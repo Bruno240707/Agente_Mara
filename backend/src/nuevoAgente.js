@@ -27,7 +27,7 @@ const ollamaLLM = new Ollama({
     model: "qwen3:1.7b",
     temperature: 0.75,
     timeout: 2 * 60 * 1000,
-    baseUrl: "http://localhost:11436"
+    baseUrl: "http://localhost:11435"
 });
 
 const buscarProductosPorCiudadTool = tool({
@@ -77,7 +77,7 @@ const listarCategoriasTool = tool({
             if (!categorias || categorias.length === 0) return "No hay categorías registradas.";
             return categorias.map(cat =>
                 `- Categoría: ${cat.descripcion}`
-            ).join('\n');
+            ).join('');
         } catch (error) {
             return `Error al listar categorías: ${error.message}`;
         }

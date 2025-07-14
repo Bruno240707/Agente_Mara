@@ -1,3 +1,3 @@
-import { crearMarap } from './crear-agente.js';
+import { crearMarap } from './nuevoAgente.js';
 
-export const elAgente = crearMarap({ verbose: false });
+export const agenteMarap = crearMarap({ verbose: false });

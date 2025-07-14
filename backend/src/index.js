@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { elAgente } from './agent.js';
+import { agenteMarap } from './agent.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,7 +18,7 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    const respuesta = await elAgente.run(mensaje);
+    const respuesta = await agenteMarap.run(mensaje);
     let userResponse = respuesta?.data?.result || "No response from agent";
     userResponse = userResponse.replace(/<think>.*?<\/think>/gs, '').replace(/StopEvent/g, '').trim();
     res.json({ response: userResponse });

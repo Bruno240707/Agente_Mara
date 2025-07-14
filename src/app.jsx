@@ -34,7 +34,7 @@ export default function App() {
     <div className="main-chat-bg min-h-screen">
       <div className="chat-box w-full max-w-md">
         <h1>
-        Chat con el Asistente de Planix
+        MARA, el asistente de Planix.
         </h1>
         <Chat mensajes={mensajes} loading={loading} />
         <form className="mt-4 flex gap-2" onSubmit={handleSend}>

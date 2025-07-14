@@ -1,7 +1,5 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = 'https://tjzjovruebzwfznkhvoo.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqempvdnJ1ZWJ6d2Z6bmtodm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc2NTc2NDEsImV4cCI6MjA2MzIzMzY0MX0.j-WEiERi5bVzCeQqztxWS3-hxVGWwkXLfzu8owzpM24'
-
+const supabaseUrl = 'https://cktbpfzieczvjrtepiuh.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNrdGJwZnppZWN6dmpydGVwaXVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwMTEyNDUsImV4cCI6MjA2MzU4NzI0NX0.wvorf0-d2MNLbr_6tttZFelvvogW5Uh_e9aiIwYaujs'
 export const supabase = createClient(supabaseUrl, supabaseKey)

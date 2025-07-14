@@ -4,7 +4,6 @@ function imprimirMensaje(mensaje) {
   console.log(mensaje);
 }
 
-// Formateador de respuestas básico
 function formatResponse(response){
   return `📝 Respuesta:\n${response.data.result}`;
 }
@@ -26,7 +25,7 @@ async function empezarChat(elAgente, mensajeBienvenida = ''){
 
     for await (const pregunta of rl) {
       if (pregunta.toLowerCase() === 'exit') {
-        imprimirMensaje("\n👋 ¡Chau! ¡Gracias por usar el asistente!");
+        imprimirMensaje("\n👋 Nos vemos, espero haber ayudado");
         rl.close();
         process.exit(0);
       }
@@ -37,7 +36,7 @@ async function empezarChat(elAgente, mensajeBienvenida = ''){
 
       imprimirMensaje(formatResponse(respuesta));
       imprimirMensaje(`\n⏱️  Tiempo de respuesta: ${((end - start) / 1000).toFixed(2)} segundos`);
-      imprimirMensaje("\n❓ ¿Qué más querés saber?");
+      imprimirMensaje("\n❓ ¿En que te puedo ayudar?");
     }
   } catch (error) {
     console.error("\n❌ Ups, algo salió mal:", error);

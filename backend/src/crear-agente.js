@@ -6,140 +6,131 @@ import { Busqueda } from "../lib/busqueda.js";
 const busqueda = new Busqueda();
 
 const systemPrompt = `
-Sos un asistente para consultar información sobre balnearios y ciudades.
-Tu tarea es ayudar a consultar o mostrar datos de balnearios y la ciudad donde se encuentran.
+Sos un asistente para consultar productos y proveedores de una plataforma de servicios.
+Ayudás a encontrar productos según ciudad, categoría o proveedor.
+
+Responde directamente a las preguntas del usuario sin mostrar tus pensamientos internos ni explicaciones.
+No incluyas etiquetas ni texto adicional como "<think>" o "StopEvent" en tus respuestas.
+Solo responde con el texto que el usuario debe ver.
 
 Usá las herramientas disponibles para:
-- Buscar balnearios por ciudad
-- Mostrar la lista completa de balnearios con su ciudad
-- Mostrar la lista de todas las ciudades disponibles
-- Filtrar balnearios en una ciudad y con servicios específicos
-- Filtrar balnearios solo por servicios
+- Buscar productos por ciudad
+- Listar todos los productos con su proveedor
+- Mostrar todas las categorías
+- Filtrar productos por ciudad y categoría
+- Filtrar productos por categoría
 
-Respondé de forma clara y breve.
-
-IMPORTANTE:
-- Cuando muestres una lista de elementos (por ejemplo, ciudades o balnearios), usá el formato Markdown de lista (cada elemento en una línea que empieza con "- " o "1. ").
-- Ejemplo de lista:  
-  - Ciudad1  
-  - Ciudad2  
-  - Ciudad3
+Usá listas markdown (con "- ") para mostrar resultados
 `.trim();
 
 const ollamaLLM = new Ollama({
     model: "qwen3:1.7b",
     temperature: 0.75,
     timeout: 2 * 60 * 1000,
+    baseUrl: "http://localhost:11436"
 });
 
-const buscarBalneariosPorCiudadTool = tool({
-    name: "buscarBalneariosPorCiudad",
-    description: "Usa esta función para encontrar balnearios en una ciudad específica",
+const buscarProductosPorCiudadTool = tool({
+    name: "buscarProductosPorCiudad",
+    description: "Busca productos disponibles en una ciudad específica",
     parameters: z.object({
-        ciudad: z.string().describe("El nombre de la ciudad a buscar"),
+      ciudad: z.string().describe("Nombre de la ciudad"),
     }),
     execute: async ({ ciudad }) => {
-        try {
-            const balnearios = await busqueda.buscarBalneariosPorCiudad(ciudad);
-            if (!balnearios || balnearios.length === 0) return "No se encontraron balnearios en esa ciudad.";
-            return balnearios.map(bal => 
-                `Balneario: ${bal.nombre}, Dirección: ${bal.direccion}, Teléfono: ${bal.telefono || "No informado"}`
-            ).join('\n');
-        } catch (error) {
-            return `Error al buscar balnearios: ${error.message}`;
-        }
-    },
-});
+      try {
+        const productos = await busqueda.buscarProductosPorCiudad(ciudad);
+        if (!productos.length) return "No se encontraron productos en esa ciudad.";
+        return productos.map(p => 
+          `- Producto: ${p.producto}, Precio: $${p.precio}, Proveedor: ${p.proveedor}`
+        ).join('\n');
+      } catch (error) {
+        return `Error: ${error.message}`;
+      }
+    }
+  });
+  
 
-const listarBalneariosTool = tool({
-    name: "listarBalnearios",
-    description: "Muestra todos los balnearios y la ciudad donde se encuentran",
+const listarProductosTool = tool({
+    name: "listarProductos",
+    description: "Muestra todos los productos con su proveedor y ciudad",
     parameters: z.object({}),
     execute: async () => {
         try {
-            const lista = await busqueda.listarBalneariosConCiudades();
-            if (!lista || lista.length === 0) return "No hay balnearios registrados.";
-            return lista.map(bal => 
-                `Balneario: ${bal.nombre}, Ciudad: ${bal.ciudad}, Dirección: ${bal.direccion}, Teléfono: ${bal.telefono || "No informado"}`
+            const lista = await busqueda.listarProductosConProveedor();
+            if (!lista || lista.length === 0) return "No hay productos registrados.";
+            return lista.map(prod =>
+                `- Producto: ${prod.descripcion}, Precio: $${prod.precio}, Proveedor: ${prod.proveedor}, Ciudad: ${prod.ciudad}`
             ).join('\n');
         } catch (error) {
-            return `Error al listar balnearios: ${error.message}`;
+            return `Error al listar productos: ${error.message}`;
         }
     },
 });
 
-const listarCiudadesTool = tool({
-    name: "listarCiudades",
-    description: "Muestra la lista de todas las ciudades disponibles",
+const listarCategoriasTool = tool({
+    name: "listarCategorias",
+    description: "Muestra la lista de todas las categorías de productos disponibles",
     parameters: z.object({}),
     execute: async () => {
         try {
-            const ciudades = await busqueda.listarCiudades();
-            if (!ciudades || ciudades.length === 0) return "No hay ciudades registradas.";
-            return ciudades.map(ciudad => 
-                `Ciudad: ${ciudad.nombre}`
+            const categorias = await busqueda.listarCategorias();
+            if (!categorias || categorias.length === 0) return "No hay categorías registradas.";
+            return categorias.map(cat =>
+                `- Categoría: ${cat.descripcion}`
             ).join('\n');
         } catch (error) {
-            return `Error al listar ciudades: ${error.message}`;
+            return `Error al listar categorías: ${error.message}`;
         }
     },
 });
 
-/**
- * Filtra balnearios por nombre de ciudad y por nombres de servicios (no por ID).
- */
-const filtrarBalneariosPorCiudadYServiciosTool = tool({
-    name: "filtrarBalneariosPorCiudadYServicios",
-    description: "Filtra balnearios que estén en una ciudad (puede ser parcial) y cuenten con TODOS los servicios especificados por nombre (ejemplo: ciudad='Miramar', servicios=['Wi-Fi','Pileta'])",
+const filtrarProductosPorCiudadYCategoriasTool = tool({
+    name: "filtrarProductosPorCiudadYCategorias",
+    description: "Filtra productos que estén en una ciudad (puede ser parcial) y pertenezcan a todas las categorías especificadas por nombre",
     parameters: z.object({
         ciudad: z.string().describe("El nombre de la ciudad a buscar (puede ser parcial, puede quedar vacío para no filtrar por ciudad)"),
-        servicios: z.array(z.string()).describe("Nombres de los servicios requeridos (puede ser parcial, ej: 'Wi-Fi', 'Pileta')"),
+        categorias: z.array(z.string()).describe("Nombres de las categorías requeridas"),
     }),
-    execute: async ({ ciudad, servicios }) => {
+    execute: async ({ ciudad, categorias }) => {
         try {
-            const balnearios = await busqueda.filtrarBalneariosPorCiudadYServicios(ciudad, servicios);
-            if (!balnearios || balnearios.length === 0) return "No se encontraron balnearios en esa ciudad con esos servicios.";
-            return balnearios.map(bal => 
-                `Balneario: ${bal.nombre}, Ciudad: ${bal.ciudad}, Dirección: ${bal.direccion}, Teléfono: ${bal.telefono || "No informado"}`
+            const productos = await busqueda.filtrarProductosPorCiudadYCategorias(ciudad, categorias);
+            if (!productos || productos.length === 0) return "No se encontraron productos en esa ciudad con esas categorías.";
+            return productos.map(prod =>
+                `- Producto: ${prod.descripcion}, Precio: $${prod.precio}, Proveedor: ${prod.proveedor}, Ciudad: ${prod.ciudad}`
             ).join('\n');
         } catch (error) {
-            return `Error al filtrar balnearios: ${error.message}`;
+            return `Error al filtrar productos: ${error.message}`;
         }
     },
 });
 
-/**
- * NUEVO: Filtra balnearios solo por servicios (por nombre, no por ID), SIN filtrar por ciudad.
- * Recibe: servicios (array de string, nombres/parciales de servicios, ej: ["Wi-Fi", "Pileta"])
- */
-const filtrarBalneariosPorServiciosTool = tool({
-    name: "filtrarBalneariosPorServicios",
-    description: "Filtra balnearios que cuenten con TODOS los servicios especificados por nombre (ejemplo: servicios=['Wi-Fi','Pileta']). No filtra por ciudad.",
+const filtrarProductosPorCategoriasTool = tool({
+    name: "filtrarProductosPorCategorias",
+    description: "Filtra productos que pertenezcan a todas las categorías especificadas. No filtra por ciudad.",
     parameters: z.object({
-        servicios: z.array(z.string()).describe("Nombres de los servicios requeridos (puede ser parcial, ej: 'Wi-Fi', 'Pileta')"),
+        categorias: z.array(z.string()).describe("Nombres de las categorías requeridas"),
     }),
-    execute: async ({ servicios }) => {
+    execute: async ({ categorias }) => {
         try {
-            // Llama con ciudad vacía para que solo filtre por servicios
-            const balnearios = await busqueda.filtrarBalneariosPorCiudadYServicios("", servicios);
-            if (!balnearios || balnearios.length === 0) return "No se encontraron balnearios con esos servicios.";
-            return balnearios.map(bal => 
-                `Balneario: ${bal.nombre}, Ciudad: ${bal.ciudad}, Dirección: ${bal.direccion}, Teléfono: ${bal.telefono || "No informado"}`
+            const productos = await busqueda.filtrarProductosPorCiudadYCategorias("", categorias);
+            if (!productos || productos.length === 0) return "No se encontraron productos con esas categorías.";
+            return productos.map(prod =>
+                `- Producto: ${prod.descripcion}, Precio: $${prod.precio}, Proveedor: ${prod.proveedor}, Ciudad: ${prod.ciudad}`
             ).join('\n');
         } catch (error) {
-            return `Error al filtrar balnearios: ${error.message}`;
+            return `Error al filtrar productos: ${error.message}`;
         }
     },
 });
 
-export function crearAgenteBalnearios({ verbose = true } = {}) {
+export function crearMarap({ verbose = true } = {}) {
     return agent({
         tools: [
-            buscarBalneariosPorCiudadTool,
-            listarBalneariosTool,
-            listarCiudadesTool,
-            filtrarBalneariosPorCiudadYServiciosTool,
-            filtrarBalneariosPorServiciosTool // Nuevo tool agregado
+            buscarProductosPorCiudadTool,
+            listarProductosTool,
+            listarCategoriasTool,
+            filtrarProductosPorCiudadYCategoriasTool,
+            filtrarProductosPorCategoriasTool
         ],
         llm: ollamaLLM,
         verbose,

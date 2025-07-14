@@ -53,6 +53,19 @@ const buscarProductosPorCiudadTool = tool({
     }
   });
   
+  export const guiarEditarPerfilTool = tool({
+    name: "guiarEditarPerfil",
+    description: "Guía al usuario para editar su perfil (nombre, email, contraseña)",
+    parameters: z.object({}),
+    execute: async () => {
+      return `Para editar tu perfil:
+  1. Iniciá sesión en la plataforma.
+  2. Hacé clic en tu nombre o ícono de usuario (arriba a la derecha).
+  3. Elegí la opción “Editar perfil”.
+  4. Modificá los datos que necesites (nombre, email, contraseña, etc.).
+  5. Guardá los cambios.`;
+    },
+});
 
 const listarProductosTool = tool({
     name: "listarProductos",
@@ -164,6 +177,38 @@ export const guiarRecuperarClaveTool = tool({
     },
 });
 
+export const guiarEliminarCuentaTool = tool({
+    name: "guiarEliminarCuenta",
+    description: "Explica cómo eliminar la cuenta del sistema",
+    parameters: z.object({}),
+    execute: async () => {
+      return `Si querés eliminar tu cuenta:
+  1. Iniciá sesión.
+  2. Accedé a “Editar perfil” o “Configuración”.
+  3. Al final de la página, encontrarás la opción “Eliminar cuenta”.
+  4. Confirmá la acción ingresando tu contraseña.
+  ⚠️ Esta acción es irreversible.`;
+    },
+});
+
+export const guiarPublicarProductoTool = tool({
+    name: "guiarPublicarProducto",
+    description: "Explica cómo un usuario puede publicar un producto con fotos, precio y detalles",
+    parameters: z.object({}),
+    execute: async () => {
+      return `Para publicar un producto:
+  1. Iniciá sesión en la plataforma.
+  2. Dirigite a la sección “Mis productos” o “Publicar producto”.
+  3. Completá:
+     - Descripción del producto
+     - Precio
+     - Categoría
+     - Fotos (opcional)
+     - Detalles adicionales
+  4. Guardá los cambios y el producto quedará disponible.`;
+    },
+});
+
 export function crearMarap({ verbose = true } = {}) {
     return agent({
         tools: [
@@ -174,7 +219,10 @@ export function crearMarap({ verbose = true } = {}) {
             filtrarProductosPorCategoriasTool,
             guiarRegistroTool,
             guiarLoginTool,
-            guiarRecuperarClaveTool
+            guiarRecuperarClaveTool,
+            guiarEditarPerfilTool,
+            guiarEliminarCuentaTool,
+            guiarPublicarProductoTool,
         ],
         llm: ollamaLLM,
         verbose,
